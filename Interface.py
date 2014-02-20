@@ -1,7 +1,10 @@
 __author__ = 'Nathan'
+
 """
-Need to reroute read_csv() to the actual temp.csv in the server
 currently when incorrect input is done 'nan' is being interpreted as 0
+    -how much should nan be worth, compared to a slow response?
+    -i.e. I missed purple twice because I wasn't paying attention, but I really was slow on yellow.
+    -Solution? -- Give an accepted misses threshold?
 """
 from random import randrange
 from collections import namedtuple
@@ -16,12 +19,12 @@ GRIP_5 = 'Yellow Grip'
 
 
 encouragement_string_list = [
-    "You are doing very well!",
-    "Good job on that last set!",
-    "You have improved a lot!",
-    "Excellent work",
-    "Have you been practicing?",
-    "Keep up the good work!"
+    'You are doing very well!',
+    'Good job on that last set!',
+    'You have improved a lot!',
+    'Excellent work',
+    'Have you been practicing?',
+    'Keep up the good work!'
 ]
 
 Grip_String_list = [
@@ -36,7 +39,7 @@ def read_csv() -> [Stat]:
     '''
 
     stat_list = []
-    with open('test.csv', 'r') as infile:
+    with open('Z:\\musicglove\\resources\\saves\\temp\\temp.csv', 'r') as infile:
 
         for line in infile:
             temp_stat = line.strip().split(",")
@@ -93,6 +96,7 @@ def gather_info(stat_list: [Stat]) -> [int]:
         elif stat.expected == 5:
             grip_5_list.append(stat)
 
+    
     grip_1_avg =  average_grip_time(grip_1_list)
     grip_2_avg = average_grip_time(grip_2_list)
     grip_3_avg = average_grip_time(grip_3_list)
@@ -110,7 +114,6 @@ def evaluate_info(grip_times: [int]) -> int:
         if current < time:
             current = time
             worst_grip = i
-    print(worst_grip)
     return worst_grip
 
 def response_generator(worst_grip: int) -> str:
@@ -135,14 +138,6 @@ def response_generator(worst_grip: int) -> str:
 
     grip_string = ('{} {}'.format(Grip_String_list[randrange(len(Grip_String_list))], grip))
     return ('{} {}'.format(encouragement_string, grip_string))
-
-
-
-'''Test Data
-stat_list = read_csv()
-for stat in stat_list:
-        print("expected grip = {} grip = {} time difference = {}".format(stat.actual, stat.expected, stat.time))
-'''
 
 if __name__ == '__main__':
     print(response_generator(evaluate_info(gather_info(read_csv()))))
