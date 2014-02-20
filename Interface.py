@@ -1,5 +1,8 @@
 __author__ = 'Nathan'
+### Nathanial Benjamin, UCI, Calit2, CalPlug, 2014-Feb
 
+### Timing program allowing the MusicGlove interface program to be called
+###    at regular intervals during a song.
 """
 currently when incorrect input is done 'nan' is being interpreted as 0
     -how much should nan be worth, compared to a slow response?
