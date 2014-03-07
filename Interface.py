@@ -1,59 +1,41 @@
 __author__ = 'Nathan'
 ### Nathanial Benjamin, UCI, Calit2, CalPlug, 2014-Feb
 
-### Timing program allowing the MusicGlove interface program to be called
-###    at regular intervals during a song.
+### The MusicGlove interface: evaluates a csv file's data and converts that data into statistics telling how well the
+###    user is preforming, then returns a string giving encouragement and advice.
+
 """
-currently when incorrect input is done 'nan' is being interpreted as 0
+currently when incorrect input is done 'nan' is being interpreted as 200 25% more than the maximum late grip
     -how much should nan be worth, compared to a slow response?
     -i.e. I missed purple twice because I wasn't paying attention, but I really was slow on yellow.
     -Solution? -- Give an accepted misses threshold?
+add ability to test if worst grip has remained the same... if it has substitute 2nd worst grip
 """
-from random import randrange
+
+import Mglove_str_gen
 from collections import namedtuple
 Stat = namedtuple('Stat', 'expected actual difference')
 
-# Grip list
-GRIP_1 = 'Red Grip'
-GRIP_2 = 'Blue Grip'
-GRIP_3 = 'Green Grip'
-GRIP_4 = 'Purple Grip'
-GRIP_5 = 'Yellow Grip'
-
-
-encouragement_string_list = [
-    'You are doing very well!',
-    'Good job on that last set!',
-    'You have improved a lot!',
-    'Excellent work',
-    'Have you been practicing?',
-    'Keep up the good work!'
-]
-
-Grip_String_list = [
-    "I noticed that you were having a little trouble with the", #blue grip...for
-    "On this next set lets try focusing on the",
-    "We could still do a little more work on the",
-    "Why don't we focus on the",
-]
-def read_csv() -> [Stat]:
+def parse_csv(infile: "stat_list") -> [Stat]:
     '''Read data from a .csv file, and return a namedtuple containing
        the actual and expected fingers, and the time difference from expected.
     '''
-
+    ALPHA = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+    print("entering parse_CSV")
     stat_list = []
-    with open('Z:\\musicglove\\resources\\saves\\temp\\temp.csv', 'r') as infile:
-
-        for line in infile:
-            temp_stat = line.strip().split(",")
+    for temp_stat in infile:
+        try:
+            if type(temp_stat) is str:
+                continue
             if temp_stat[2] == 'nan': #Keep it from throwing errors because 'nan' is not a float
-                temp_stat[2] = 0
+                temp_stat[2] = -200 # A missed grip will count 25% more than the maximum late/early grip
             stat_list.append(Stat(int(temp_stat[0]), int(temp_stat[1]), float(temp_stat[2])))
+        except IndexError:
+            pass
     return stat_list
 
 def difference_from_zero(time: float) -> float:
     '''calculates the difference from zero'''
-
     if time > 0:
         return time
     elif time < 0:
@@ -63,7 +45,7 @@ def difference_from_zero(time: float) -> float:
 
 def average_grip_time(grip_stats: [Stat]) -> float:
     '''Sums the total time for a given grip, then returns average reaction time'''
-
+    print("entering average_grip_time")
     if grip_stats == []:
         return 0
     time = 0
@@ -78,7 +60,7 @@ def average_grip_time(grip_stats: [Stat]) -> float:
 def gather_info(stat_list: [Stat]) -> [int]:
     '''Use the stats to evaluate user performance, then determine what
        correction needs to be taken'''
-
+    print("entering gather_info")
     error_list = []
     grip_1_list = []
     grip_2_list = []
@@ -99,7 +81,7 @@ def gather_info(stat_list: [Stat]) -> [int]:
         elif stat.expected == 5:
             grip_5_list.append(stat)
 
-    
+
     grip_1_avg =  average_grip_time(grip_1_list)
     grip_2_avg = average_grip_time(grip_2_list)
     grip_3_avg = average_grip_time(grip_3_list)
@@ -109,6 +91,7 @@ def gather_info(stat_list: [Stat]) -> [int]:
 
 def evaluate_info(grip_times: [int]) -> int:
     '''Determines which grip needs the most focus'''
+    print("entering evaluate info")
     current = 0
     worst_grip = 0
     i = 0
@@ -119,28 +102,21 @@ def evaluate_info(grip_times: [int]) -> int:
             worst_grip = i
     return worst_grip
 
-def response_generator(worst_grip: int) -> str:
-    '''Join an encouragement string with an appropriate finger string'''
-    grip = ''
-    print(worst_grip)
-    # determine grip that needs work
-    if worst_grip == 1:
-        grip = GRIP_1
-    elif worst_grip == 2:
-        grip = GRIP_2
-    elif worst_grip == 3:
-        grip = GRIP_3
-    elif worst_grip == 4:
-        grip = GRIP_4
-    elif worst_grip == 5:
-        grip = GRIP_5
+def evaluate_best_grip(grip_times: [int]) -> int:
+    '''Determines which grip needs the most focus'''
+    print("entering evaluate_best_grip")
+    current = 9001
+    best_grip = 0
+    i = 0
+    for time in grip_times:
+        i += 1
+        if current > time:
+            if current != 0:
+                current = time
+            best_grip = i
+            print("best grip =", best_grip)
+    return best_grip
 
-    encouragement_string = encouragement_string_list[randrange(len(encouragement_string_list))]
-    if grip == '':
-        return encouragement_string
-
-    grip_string = ('{} {}'.format(Grip_String_list[randrange(len(Grip_String_list))], grip))
-    return ('{} {}'.format(encouragement_string, grip_string))
 
 if __name__ == '__main__':
-    print(response_generator(evaluate_info(gather_info(read_csv()))))
+    print(Mglove_str_gen.worst_grip_str_generator(evaluate_info(gather_info(parse_csv()))))
