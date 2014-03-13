@@ -15,7 +15,7 @@ ENCOURAGEMENT_STR_LIST = [
     'You are doing very well!',
     'Good job on that last set!',
     'You have improved a lot!',
-    'Excellent work',
+    'Excellent work!',
     'Have you been practicing?',
     'Keep up the good work!'
 ]
@@ -34,6 +34,12 @@ BEST_GRIP_STR_LIST = [
     "You obviously do not need any more practise on the",
     "you are doing great with the",
 ]
+
+def grip_avg_summary_str(grip_avg_list: list) -> str:
+    ''''''
+    return "Red Grip avg: {}; Blue Grip avg: {};Green Grip avg: {}; Purple Grip avg: {}; Yellow Grip avg: {}".format(
+        grip_avg_list[0], grip_avg_list[1], grip_avg_list[2], grip_avg_list[3], grip_avg_list[4])
+
 
 def encouraging_str_generator() -> str:
     ''' Make an encouraging statement
@@ -59,7 +65,7 @@ def worst_grip_str_generator(worst_grip: int) -> str:
     elif grip == '':
         return encouraging_str_generator()
 
-    grip_string = ('{} {}'.format(WORST_GRIP_STR_LIST[randrange(len(WORST_GRIP_STR_LIST))], grip))
+    grip_string = ('{} {}.'.format(WORST_GRIP_STR_LIST[randrange(len(WORST_GRIP_STR_LIST))], grip))
     return ('{} {}'.format(encouraging_str_generator(), grip_string))
 
 def summary_generator(worst_grip: int, best_grip: int) -> str:
@@ -80,8 +86,8 @@ def summary_generator(worst_grip: int, best_grip: int) -> str:
         grip = GRIP_5
     print("best_grip = ", grip)
 
-    best_grip_str = ('{} {}!'.format(BEST_GRIP_STR_LIST[randrange(len(BEST_GRIP_STR_LIST))], grip))
-    return ('{} {}'.format(worst_grip_str_generator(worst_grip), best_grip_str))
+    best_grip_str = ('{} {}'.format(BEST_GRIP_STR_LIST[randrange(len(BEST_GRIP_STR_LIST))], grip))
+    return ('{} {}!'.format(worst_grip_str_generator(worst_grip), best_grip_str))
 
 
 if __name__ == '__main__':
