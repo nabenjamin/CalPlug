@@ -42,6 +42,7 @@ class MusicGloveSong:
             print("song continues")
             self._lastline = csv_lastline
             self._song_over = False
+        return
 
 
     def _time_30_sec(self) -> None:
@@ -53,9 +54,12 @@ class MusicGloveSong:
             if self._song_over is True:
                 break
         self._set_last_30_sec()
+        return
 
 
     def _set_last_30_sec(self) -> None:
+        ''' sets the grip list for the past 30 seconds of the song
+        '''
         print("entering set_last_30")
         grip_list = CSV_functions.read_csv(CSV_functions.MUSICGLOVE)
         test_info = len(grip_list)
@@ -68,10 +72,11 @@ class MusicGloveSong:
             self._grip_count += len(grip_list)
             print("grip count = {} and grip_list = {}".format(self._grip_count, len(grip_list)))
         self._last_30_sec = grip_list
+        return
 
 
     def _read_lastline(self)-> str:
-        """ Reads the last line of the csv
+        """ Reads the last line of the csv containing the user's grip information
         """
         print("entering _read_lastline()")
         lastline = CSV_functions.read_csv(CSV_functions.MUSICGLOVE)[-1]
@@ -83,6 +88,7 @@ class MusicGloveSong:
         """
         print("entering _compile_result()")
         self._csv_result.append(summary)
+        return
 
 
     def test_for_restart(self) -> None:
@@ -94,18 +100,20 @@ class MusicGloveSong:
             if self._song_over is False:
                 self.execute_song()
                 if self._song_over is True:
-                    interface_info = Interface.gather_info(Interface.parse_csv(CSV_functions.read_csv(CSV_functions.MUSICGLOVE)))
+                    interface_info = Interface.gather_info(
+                        Interface.parse_csv(CSV_functions.read_csv(CSV_functions.MUSICGLOVE)))
                     print(interface_info)
                     self._compile_result(Mglove_str_gen.grip_avg_summary_str(interface_info))
                     summary = Mglove_str_gen.summary_generator(Interface.evaluate_info(interface_info, 0),
                                                                Interface.evaluate_best_grip(interface_info))
-                    Send_to_voice_server.text_to_ispeech(Send_to_voice_server.text_str_translator(summary))     ###print("summary = ",summary)
+                    Send_to_voice_server.text_to_ispeech(Send_to_voice_server.text_str_translator(summary))
                     self._last_30_sec = []
                     self._compile_result(summary)
                     CSV_functions.make_csv(self._csv_result)
                     self.__init__()
             else:
                 print("no restart yet")
+        return
 
 
     def execute_song(self) -> None:
@@ -117,13 +125,16 @@ class MusicGloveSong:
             grip_info = Interface.gather_info(Interface.parse_csv(self._last_30_sec))
             self._compile_result(Mglove_str_gen.grip_avg_summary_str(grip_info))
             summary = Mglove_str_gen.worst_grip_str_generator(Interface.evaluate_info(grip_info, self._last_worst_grip))
+            self._last_worst_grip = Interface.evaluate_info(grip_info, self._last_worst_grip)
             self._compile_result(summary)
             self._compile_result(' ')
             if self._song_over is True:
-                break
-            Send_to_voice_server.text_to_ispeech(Send_to_voice_server.text_str_translator(summary))         ###print("summary = ",summary)
+                return
+            Send_to_voice_server.text_to_ispeech(Send_to_voice_server.text_str_translator(summary))
+        return
             
 
+
+
 if __name__ == "__main__":
-    S = MusicGloveSong()
-    S.test_for_restart()
+    MusicGloveSong().test_for_restart()

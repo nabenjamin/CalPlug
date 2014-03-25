@@ -21,10 +21,11 @@ ENCOURAGEMENT_STR_LIST = [
 ]
 
 WORST_GRIP_STR_LIST = [
-    "I noticed that you were having a little trouble with the", #blue grip...for
-    "On this next set lets try focusing on the",
-    "We could still do a little more work on the",
-    "Why don't we focus on the",
+    "I noticed that you were having a little trouble with the ", #blue grip...for
+    "On this next set lets try focusing on the ",
+    "We could still do a little more work on the ",
+    "Why don't we focus on the ",
+    "Let's keep working on the "
 ]
 
 BEST_GRIP_STR_LIST = [
@@ -36,7 +37,8 @@ BEST_GRIP_STR_LIST = [
 ]
 
 def grip_avg_summary_str(grip_avg_list: list) -> str:
-    ''''''
+    ''' returns a string showing the average times for all grips (includes grips that may have been unused this song)
+    '''
     return "Red Grip avg: {}; Blue Grip avg: {};Green Grip avg: {}; Purple Grip avg: {}; Yellow Grip avg: {}".format(
         grip_avg_list[0], grip_avg_list[1], grip_avg_list[2], grip_avg_list[3], grip_avg_list[4])
 
@@ -44,12 +46,11 @@ def grip_avg_summary_str(grip_avg_list: list) -> str:
 def encouraging_str_generator() -> str:
     ''' Make an encouraging statement
     '''
-    print("entering encouraging_str_generator")
     return ENCOURAGEMENT_STR_LIST[randrange(len(ENCOURAGEMENT_STR_LIST))]
+
 
 def worst_grip_str_generator(worst_grip: int) -> str:
     '''Join an encouragement string with an appropriate finger string'''
-    print("entering worst_grip_str_generator")
     grip = ''
     # determine grip that needs work
     if worst_grip == 1:
@@ -62,16 +63,15 @@ def worst_grip_str_generator(worst_grip: int) -> str:
         grip = GRIP_4
     elif worst_grip == 5:
         grip = GRIP_5
-    elif grip == '':
+    elif worst_grip == 0:
         return encouraging_str_generator()
-
     grip_string = ('{} {}.'.format(WORST_GRIP_STR_LIST[randrange(len(WORST_GRIP_STR_LIST))], grip))
     return ('{} {}'.format(encouraging_str_generator(), grip_string))
+
 
 def summary_generator(worst_grip: int, best_grip: int) -> str:
     ''' Returns 3 sentences: an encouragement_str, worst_grip_str, best_grip_str
     '''
-    print("entering summary_generator")
     grip = ''
     # determine grip that needs work
     if best_grip == 1:
@@ -84,10 +84,10 @@ def summary_generator(worst_grip: int, best_grip: int) -> str:
         grip = GRIP_4
     elif best_grip == 5:
         grip = GRIP_5
-    print("best_grip = ", grip)
-
     best_grip_str = ('{} {}'.format(BEST_GRIP_STR_LIST[randrange(len(BEST_GRIP_STR_LIST))], grip))
     return ('{} {}!'.format(worst_grip_str_generator(worst_grip), best_grip_str))
+
+
 
 
 if __name__ == '__main__':

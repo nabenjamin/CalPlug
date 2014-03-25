@@ -1,8 +1,20 @@
-__author__ = 'Nathan'
+### Nathanial Benjamin, UCI, Calit2, CalPlug, 2014-Feb
+
 
 import csv
+from time import strftime, gmtime
+
+
+### The file where user grip data for current song is stored
 MUSICGLOVE = 'Z:\\musicglove\\resources\\saves\\temp\\temp.csv'
-CALPLUG = 'C:\\Users\\Nathan\\Desktop\\CalPlug\\temp.csv'
+#MY_COMP = 'C:\\Users\\Nathan\\Desktop\\CalPlug\\temp.csv'
+
+### Sets a unique timestamped filename, in the summaries directory, for the stats of the current song
+M_GLOVE_SUMMARIES = "Z:\\musicglove\\summaries\\{}.csv".format(
+        strftime("%a,%d_%b_%Y_%H;%M;%S", gmtime()))
+#MY_SUMMARIES = "C:\\Users\\Nathan\\Desktop\\CalPlug\\summaries\\{}.csv".format(
+        #strftime("%a,%d_%b_%Y_%H;%M;%S", gmtime()))
+
 
 def read_csv(file_path: str) -> list:
     '''Read data from a .csv file, and return a list containing
@@ -17,11 +29,13 @@ def read_csv(file_path: str) -> list:
             stat_list.append(temp_stat)
     return stat_list
 
+
 def make_csv(stat_list: list):
     ''' Takes a list of stats and/or strings and writes them into .csv file format
     '''
     print("entering make_csv")
-    with open('C:\\Users\\Nathan\\Desktop\\CalPlug\\temp.csv', 'w', newline='') as csvfile:
+    filename = M_GLOVE_SUMMARIES
+    with open(filename, 'w', newline='') as csvfile:
         for i in stat_list:
             print('i = ', i)
             csv_writer = csv.writer(csvfile, delimiter=',')
@@ -30,6 +44,9 @@ def make_csv(stat_list: list):
                 csv_writer.writerow([])
             else:
                 csv_writer.writerow(i)
+    return
+
+
 
 
 if __name__ == '__main__':

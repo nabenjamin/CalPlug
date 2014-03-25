@@ -5,21 +5,19 @@ __author__ = 'Nathan'
 ###    user is preforming, then returns a string giving encouragement and advice.
 
 """
-currently when incorrect input is done 'nan' is being interpreted as 200 25% more than the maximum late grip
+currently when incorrect input is done 'nan' is being interpreted as 300 50% more than the maximum late grip
     -how much should nan be worth, compared to a slow response?
-    -i.e. I missed purple twice because I wasn't paying attention, but I really was slow on yellow.
-    -Solution? -- Give an accepted misses threshold?
 """
 
 import Mglove_str_gen
 from collections import namedtuple
+
 Stat = namedtuple('Stat', 'expected actual difference')
 
 def parse_csv(infile: "stat_list") -> [Stat]:
     '''Read data from a list of statistics, and return a namedtuple containing
        the actual and expected fingers, and the time difference from expected.
     '''
-    ALPHA = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
     print("entering parse_CSV")
     stat_list = []
     for temp_stat in infile:
@@ -27,7 +25,7 @@ def parse_csv(infile: "stat_list") -> [Stat]:
             if type(temp_stat) is str:
                 continue
             if temp_stat[2] == 'nan': #Keep it from throwing errors because 'nan' is not a float
-                temp_stat[2] = -200 # A missed grip will count 25% more than the maximum late/early grip
+                temp_stat[2] = -300 # A missed grip will count 25% more than the maximum late/early grip
             stat_list.append(Stat(int(temp_stat[0]), int(temp_stat[1]), float(temp_stat[2])))
         except IndexError:
             pass
@@ -80,13 +78,13 @@ def gather_info(stat_list: [Stat]) -> [int]:
         elif stat.expected == 5:
             grip_5_list.append(stat)
 
-
     grip_1_avg =  average_grip_time(grip_1_list)
     grip_2_avg = average_grip_time(grip_2_list)
     grip_3_avg = average_grip_time(grip_3_list)
     grip_4_avg = average_grip_time(grip_4_list)
     grip_5_avg = average_grip_time(grip_5_list)
     return [grip_1_avg, grip_2_avg, grip_3_avg, grip_4_avg, grip_5_avg]
+
 
 def evaluate_info(grip_times: [int], last_worst_grip: int) -> int:
     '''Determines which grip needs the most focus'''
@@ -102,6 +100,7 @@ def evaluate_info(grip_times: [int], last_worst_grip: int) -> int:
             current = time
             worst_grip = i
     return worst_grip
+
 
 def evaluate_best_grip(grip_times: [int]) -> int:
     '''Determines which grip needs the most focus'''
@@ -119,6 +118,8 @@ def evaluate_best_grip(grip_times: [int]) -> int:
             best_grip = i
             print("best grip =", best_grip)
     return best_grip
+
+
 
 
 if __name__ == '__main__':
@@ -139,4 +140,5 @@ if __name__ == '__main__':
     test_info = gather_info(parse_csv(test_csv))
     print(Mglove_str_gen.worst_grip_str_generator(evaluate_info(gather_info(parse_csv(test_csv)), 0)))
     print(Mglove_str_gen.worst_grip_str_generator(evaluate_info(gather_info(parse_csv(test_csv)), 4)))
+    print(Mglove_str_gen.worst_grip_str_generator(evaluate_info(gather_info(parse_csv(test_csv)), 1)))
     print(Mglove_str_gen.summary_generator(evaluate_info(test_info, 0), evaluate_best_grip(test_info)))
