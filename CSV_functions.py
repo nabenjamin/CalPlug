@@ -12,8 +12,8 @@ MUSICGLOVE = 'Z:\\musicglove\\resources\\saves\\temp\\temp.csv'
 ### Sets a unique timestamped filename, in the summaries directory, for the stats of the current song
 M_GLOVE_SUMMARIES = "Z:\\musicglove\\summaries\\{}.csv".format(
         strftime("%a,%d_%b_%Y_%H;%M;%S", gmtime()))
-#MY_SUMMARIES = "C:\\Users\\Nathan\\Desktop\\CalPlug\\summaries\\{}.csv".format(
-        #strftime("%a,%d_%b_%Y_%H;%M;%S", gmtime()))
+MY_SUMMARIES = "C:\\Users\\Nathan\\Desktop\\CalPlug\\summaries\\{}.csv".format(
+        strftime("%a,%d_%b_%Y_%H;%M;%S", gmtime()))
 
 
 def read_csv(file_path: str) -> list:
@@ -30,14 +30,12 @@ def read_csv(file_path: str) -> list:
     return stat_list
 
 
-def make_csv(stat_list: list):
+def make_csv(stat_list: list, filename: str):
     ''' Takes a list of stats and/or strings and writes them into .csv file format
     '''
     print("entering make_csv")
-    filename = M_GLOVE_SUMMARIES
     with open(filename, 'w', newline='') as csvfile:
         for i in stat_list:
-            print('i = ', i)
             csv_writer = csv.writer(csvfile, delimiter=',')
             if type(i) is str:
                 csv_writer.writerow([i])

@@ -73,7 +73,7 @@ def summary_generator(worst_grip: int, best_grip: int) -> str:
     ''' Returns 3 sentences: an encouragement_str, worst_grip_str, best_grip_str
     '''
     grip = ''
-    # determine grip that needs work
+    # determine grip was best
     if best_grip == 1:
         grip = GRIP_1
     elif best_grip == 2:

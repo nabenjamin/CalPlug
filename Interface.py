@@ -33,12 +33,12 @@ def parse_csv(infile: "stat_list") -> [Stat]:
 
 def difference_from_zero(time: float) -> float:
     '''calculates the difference from zero'''
-    if time > 0:
+    if time >= 0:
         return time
     elif time < 0:
         return (0 - time)
-    else:
-        return 0
+    #else:
+        #return 0
 
 def average_grip_time(grip_stats: [Stat]) -> float:
     '''Sums the total time for a given grip, then returns average reaction time'''
@@ -113,10 +113,9 @@ def evaluate_best_grip(grip_times: [int]) -> int:
         if time == 0:
             continue
         if current > time:
-            print(time)
             current = time
             best_grip = i
-            print("best grip =", best_grip)
+            #print("best grip =", best_grip)
     return best_grip
 
 
