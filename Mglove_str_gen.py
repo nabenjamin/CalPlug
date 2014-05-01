@@ -2,6 +2,10 @@ __author__ = 'Nathan'
 ### Nathanial Benjamin, UCI, Calit2, CalPlug, 2014-Feb
 
 from random import randrange
+from time import strftime, gmtime
+
+""" Remove lines 5 and 73 (meant for testing)
+"""
 
 # Grip list
 GRIP_1 = 'Red Grip'
@@ -16,7 +20,7 @@ ENCOURAGEMENT_STR_LIST = [
     'Good job on that last set!',
     'You have improved a lot!',
     'Excellent work!',
-    'Have you been practicing?',
+    'Have you been practicing?!',
     'Keep up the good work!'
 ]
 
@@ -66,6 +70,7 @@ def worst_grip_str_generator(worst_grip: int) -> str:
     elif worst_grip == 0:
         return encouraging_str_generator()
     grip_string = ('{} {}.'.format(WORST_GRIP_STR_LIST[randrange(len(WORST_GRIP_STR_LIST))], grip))
+    print('system time = {}'.format(strftime("%H;%M;%S")))
     return ('{} {}'.format(encouraging_str_generator(), grip_string))
 
 
@@ -87,7 +92,10 @@ def summary_generator(worst_grip: int, best_grip: int) -> str:
     best_grip_str = ('{} {}'.format(BEST_GRIP_STR_LIST[randrange(len(BEST_GRIP_STR_LIST))], grip))
     return ('{} {}!'.format(worst_grip_str_generator(worst_grip), best_grip_str))
 
-
+def RIVA_translator(summary: str) -> str:
+    ''' Takes a generated feedback string, prepends number for RIVA's facial generator
+    '''
+    return "{};TTS:{}".format(ENCOURAGEMENT_STR_LIST.index(summary.split('!')[0] + '!'), summary)
 
 
 if __name__ == '__main__':

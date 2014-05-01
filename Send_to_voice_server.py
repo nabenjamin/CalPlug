@@ -62,8 +62,8 @@ def text_to_RIVA(msg_number: int, text_str: str) -> None:
     '''
     print("entering text_to_RIVA")
     with open(RIVA_LOG, 'w', newline= '\n') as outfile:
-        outfile.write('NewData:{};TTS:{}\r\n'.format(str(msg_number), text_str))
-        print('NewData:{};TTS:{}\r\n'.format(str(msg_number), text_str))
+        outfile.write('NewData:{};{}\r\n'.format(str(msg_number), text_str))
+        print('NewData:{};\r\n'.format(str(msg_number), text_str))
 
 
 

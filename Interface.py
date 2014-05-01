@@ -14,6 +14,7 @@ from collections import namedtuple
 
 Stat = namedtuple('Stat', 'expected actual difference')
 
+
 def parse_csv(infile: "stat_list") -> [Stat]:
     '''Read data from a list of statistics, and return a namedtuple containing
        the actual and expected fingers, and the time difference from expected.
@@ -37,8 +38,6 @@ def difference_from_zero(time: float) -> float:
         return time
     elif time < 0:
         return (0 - time)
-    #else:
-        #return 0
 
 def average_grip_time(grip_stats: [Stat]) -> float:
     '''Sums the total time for a given grip, then returns average reaction time'''
@@ -103,7 +102,7 @@ def evaluate_info(grip_times: [int], last_worst_grip: int) -> int:
 
 
 def evaluate_best_grip(grip_times: [int]) -> int:
-    '''Determines which grip needs the most focus'''
+    '''Determines which grip the user is most proficient with'''
     print("entering evaluate_best_grip")
     current = 9001
     best_grip = 0
@@ -119,7 +118,24 @@ def evaluate_best_grip(grip_times: [int]) -> int:
     return best_grip
 
 
-
+def what_song(grips: int) -> str:
+    '''Takes the number of grips for the past song, returns the name of the song within +/- 5 grips of it.
+    '''
+    print('entering what song? Grips= ' + str(grips))
+    #Dict of songs with associated number of grips
+    SONGS = {"In Your Eyes" : 145,
+             "Goin' Fishing" : 132,
+             "Torch of Love" : 191,
+             "That Place" : 168,
+             "Chaplin's Best Movie" : 209,
+             "So Long" : 273,
+             "Johnny's Chevrolet" : 451,
+             "Nothing to Worry About" : 541,}
+    for key, value in SONGS.items():
+        if value-5 < grips < value+5:
+            print(key)
+            return "Song Played: " + key + '\n'
+    return "Unknown Song\n"
 
 if __name__ == '__main__':
     test_csv = [['1', '1', '-16.823999999999614'], ['4', '4', '-35.30199999999968'], ['3', '3', '-85.779999999999745'],

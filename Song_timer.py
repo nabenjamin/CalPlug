@@ -7,9 +7,11 @@ import CSV_functions
 import Interface
 import Mglove_str_gen
 import Send_to_voice_server
+from time import strftime
 
 '''
    -Add function to test which song is being played by comparing to song files on MusicGlove server.
+   remove lines 142 and 10 (for testing)
 '''
 SONG_OVER_CHECK_TIME = 10
 TIME_BETWEEN_FEEDBACK = 30
@@ -80,6 +82,7 @@ class MusicGloveSong:
         """ Reads the last line of the csv containing the user's grip information
         """
         #print("entering _read_lastline()")
+        #print(CSV_functions.read_csv(CSV_functions.MUSICGLOVE))
         lastline = CSV_functions.read_csv(CSV_functions.MUSICGLOVE)[-1]
         return lastline
 
@@ -113,12 +116,13 @@ class MusicGloveSong:
                     if self._feedback_plat == "RIVA":
                         self._message_num += 1
                         #print("message_num={} summary={}".format(self._message_num, summary))
-                        Send_to_voice_server.text_to_RIVA(self._message_num, summary)
+                        Send_to_voice_server.text_to_RIVA(self._message_num, Mglove_str_gen.RIVA_translator(summary))
                     else:
                         Send_to_voice_server.text_to_ispeech(Send_to_voice_server.ispeech_formatter(summary))
                     self._last_30_sec = []
                     self._compile_result(summary)
-                    CSV_functions.make_csv(self._csv_result, CSV_functions.M_GLOVE_SUMMARIES)
+                    CSV_functions.make_csv(
+                        self._csv_result, CSV_functions.M_GLOVE_SUMMARIES, Interface.what_song(self._grip_count))
                     self.__init__()
             else:
                 print("no restart yet")
@@ -136,12 +140,14 @@ class MusicGloveSong:
             summary = Mglove_str_gen.worst_grip_str_generator(Interface.evaluate_info(grip_info, self._last_worst_grip))
             self._last_worst_grip = Interface.evaluate_info(grip_info, self._last_worst_grip)
             self._compile_result(summary)
+            self._compile_result('system time = {}'.format(strftime("%H:%M:%S")))
             self._compile_result(' ')
             if self._song_over is True:
+                print('Number of grips this song = ', self._grip_count)
                 return
             if self._feedback_plat == "RIVA":
                 self._message_num += 1
-                Send_to_voice_server.text_to_RIVA(self._message_num, summary)
+                Send_to_voice_server.text_to_RIVA(self._message_num, Mglove_str_gen.RIVA_translator(summary))
             else:
                 Send_to_voice_server.text_to_ispeech(Send_to_voice_server.ispeech_formatter(summary))
         return
