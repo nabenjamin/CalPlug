@@ -1,3 +1,5 @@
+__author__ = 'Nathan'
+### Nathanial Benjamin, UCI, Calit2, CalPlug, 2014-Feb
 ### Nathanial Benjamin, UCI, Calit2, CalPlug, 2014-Feb
 
 
@@ -33,6 +35,7 @@ def read_csv(file_path: str) -> list:
 
 def make_csv(stat_list: list, filename: str, optional_str=''):
     ''' Takes a list of stats and/or strings and writes them into .csv file format
+            -if optional_str defined, uses as the first line in the file.
     '''
     #print("entering make_csv")
     if filename == MY_SUMMARIES or filename == M_GLOVE_SUMMARIES:

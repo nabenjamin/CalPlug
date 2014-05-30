@@ -1,3 +1,4 @@
+__author__ = 'Nathan'
 ### Nathanial Benjamin, UCI, Calit2, CalPlug, 2014-Feb
 
 
@@ -5,11 +6,13 @@ import urllib
 from urllib import request
 import winsound
 from pydub import AudioSegment
+from Mglove_str_gen import RIVA_translator, emo_less_feedback
 ###     Note: pydub requires FFmpeg to convert audio files, make sure it is on the host computer.
 
 ### RIVA log file
 RIVA_LOG = "Z:\\musicglove\\resources\\saves\\temp\\RIVA_log.txt"
 LOCAL_RIVA_LOG = "C:\\Users\\Nathan\\Desktop\\CalPlug\\RIVA_log.txt"
+NO_VOICE_LOG = "Z:\\musicglove\\resources\\saves\\temp\\NORIVA_log.txt"
 
 def txt_to_NPCEditor(turn_id, text_str) -> None:
     '''takes given text string and turns it into a VHToolkit vrSpeech call
@@ -53,18 +56,41 @@ def play_sound(filename: str) -> None:
 def reset_RIVA_log() -> None:
     print("entering reset_RIVA_log")
     with open(RIVA_LOG, 'w') as file:
-        file.write("NewData:0;TTS: ")
-        print("NewData:0;TTS: ")
+        file.write("NewData:0;ENCOURAGEMENT:0;WORST_GRIP_STR:0;WORST_GRIP:0;BEST_GRIP_STR:0;BEST_GRIP:0")
+        print("NewData:0;ENCOURAGEMENT:0;WORST_GRIP_STR:0;WORST_GRIP:0;BEST_GRIP_STR:0;BEST_GRIP:0")
 
 
-def text_to_RIVA(msg_number: int, text_str: str) -> None:
+def text_to_RIVA(msg_number: int, worst_grip: int, best_grip: int) -> None:
     '''takes a number representing how many messages have been sent this song, and a txt string. formats it for RIVA
     '''
+    # for best grip if a best grip str will not be included, put a five in its place.
+    print("entering text_to_RIVA")
+    message = RIVA_translator(msg_number,worst_grip,best_grip)
+    with open(RIVA_LOG, 'w', newline= '\n') as outfile:
+        outfile.write(message)
+        print(message)
+
+
+def to_no_voice_log(message: str) -> None:
+    ''' Takes a worst and best grips, then sends them to Musicglove's logfile
+    '''
+    print("entering to_no_voice_log")
+    with open(NO_VOICE_LOG, 'w', newline= '\n') as outfile:
+        outfile.write(message)
+        print(message)
+
+
+
+"""
+def Old_text_to_RIVA(msg_number: int, text_str: str) -> None:
+    '''takes a number representing how many messages have been sent this song, and a txt string. formats it for RIVA
+    '''
+    # for best grip if a best grip str will not be included, put a five in its place.
     print("entering text_to_RIVA")
     with open(RIVA_LOG, 'w', newline= '\n') as outfile:
         outfile.write('NewData:{};{}\r\n'.format(str(msg_number), text_str))
-        print('NewData:{};\r\n'.format(str(msg_number), text_str))
-
+        print('NewData:{};{}\r\n'.format(str(msg_number), text_str))
+"""
 
 
 
@@ -74,8 +100,9 @@ if __name__ == '__main__':
     print(ispeech_formatter(test))
     #text_to_ispeech(text_str_translator(test))
     reset_RIVA_log()
-    text_to_RIVA(1,"You are doing very well! We could still do a little more work on the  Red Grip.")
-    text_to_RIVA(2,"Have you been practicing? On this next set lets try focusing on the  Purple Grip.!")
-    text_to_RIVA(3,"You are doing very well! I noticed that you were having a little trouble with the  Yellow Grip.")
-    text_to_RIVA(4,"You have improved a lot! Why don't we focus on the  Blue Grip.")
-    text_to_RIVA(5,"Excellent work! We could still do a little more work on the  Green Grip.")
+    text_to_RIVA(1,3,0)
+    text_to_RIVA(2,1,0)
+    text_to_RIVA(3,2,0)
+    text_to_RIVA(4,4,0)
+    text_to_RIVA(5,5,3)
+    reset_RIVA_log()

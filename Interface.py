@@ -135,7 +135,7 @@ def what_song(grips: int) -> str:
         if value-5 < grips < value+5:
             print(key)
             return "Song Played: " + key + '\n'
-    return "Unknown Song\n"
+    return "Unrecognized Song\n"
 
 if __name__ == '__main__':
     test_csv = [['1', '1', '-16.823999999999614'], ['4', '4', '-35.30199999999968'], ['3', '3', '-85.779999999999745'],
