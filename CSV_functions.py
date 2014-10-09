@@ -20,10 +20,10 @@ MY_SUMMARIES = "C:\\Users\\Nathan\\Desktop\\CalPlug\\summaries\\{}.txt".format(
 
 
 def read_csv(file_path: str) -> list:
-    '''Read data from a .csv file, and return a list containing
+    """Read data from a .csv file, and return a list containing
        the actual and expected fingers, and the time difference from expected.
-    '''
-    print("entering read_csv")
+    """
+    #print("entering read_csv")
     stat_list = []
     with open(file_path, 'r') as infile:
 
@@ -34,17 +34,18 @@ def read_csv(file_path: str) -> list:
 
 
 def make_csv(stat_list: list, filename: str, optional_str=''):
-    ''' Takes a list of stats and/or strings and writes them into .csv file format
+    """ Takes a list of stats and/or strings and writes them into .csv file format
             -if optional_str defined, uses as the first line in the file.
-    '''
+    """
     #print("entering make_csv")
+    #print(len(read_csv(MUSICGLOVE)))
     if filename == MY_SUMMARIES or filename == M_GLOVE_SUMMARIES:
-        filename += "{}.txt".format(strftime("%a,%d_%b_%Y_%H;%M;%S"))
-        print(filename)
+        filename += "{}.csv".format(strftime("%a,%d_%b_%Y_%H;%M;%S"))
+        #print(filename)
     with open(filename, 'w', newline='') as csvfile:
         csv_writer = csv.writer(csvfile, delimiter=',')
         if optional_str != '':
-            print(optional_str)
+            #print(optional_str)
             csv_writer.writerow([optional_str])
             csv_writer.writerow([])
         for i in stat_list:
@@ -68,9 +69,8 @@ if __name__ == '__main__':
                    'You are doing very well! On this next set lets try focusing on the Purple Grip You seemed most proficient with the Yellow Grip!']
     make_csv(test_result, M_GLOVE_SUMMARIES)
     #print(read_csv(M_GLOVE_SUMMARIES)) #fix path for test
-
     sleep(5)
     make_csv(test_result, M_GLOVE_SUMMARIES)
     sleep(5)
+    test_result.extend(read_csv(MUSICGLOVE))
     make_csv(test_result, M_GLOVE_SUMMARIES)
-

@@ -4,10 +4,10 @@ __author__ = 'Nathan'
 ### The MusicGlove interface: evaluates a csv file's data and converts that data into statistics telling how well the
 ###    user is preforming, then returns a string giving encouragement and advice.
 
-"""
+'''
 currently when incorrect input is done 'nan' is being interpreted as 300 50% more than the maximum late grip
     -how much should nan be worth, compared to a slow response?
-"""
+'''
 
 import Mglove_str_gen
 from collections import namedtuple
@@ -16,37 +16,38 @@ Stat = namedtuple('Stat', 'expected actual difference')
 
 
 def parse_csv(infile: "stat_list") -> [Stat]:
-    '''Read data from a list of statistics, and return a namedtuple containing
+    """Read data from a list of statistics, and return a namedtuple containing
        the actual and expected fingers, and the time difference from expected.
-    '''
-    print("entering parse_CSV")
+    """
+    #print("entering parse_CSV")
     stat_list = []
     for temp_stat in infile:
         try:
             if type(temp_stat) is str:
                 continue
             if temp_stat[2] == 'nan': #Keep it from throwing errors because 'nan' is not a float
-                temp_stat[2] = -300 # A missed grip will count 25% more than the maximum late/early grip
+                temp_stat[2] = -300 # A missed grip will count 50% more than the maximum late/early grip
+            #print(temp_stat[0],temp_stat[1],temp_stat[2])
             stat_list.append(Stat(int(temp_stat[0]), int(temp_stat[1]), float(temp_stat[2])))
         except IndexError:
             pass
     return stat_list
 
 def difference_from_zero(time: float) -> float:
-    '''calculates the difference from zero'''
+    """calculates the difference from zero"""
     if time >= 0:
         return time
     elif time < 0:
         return (0 - time)
 
 def average_grip_time(grip_stats: [Stat]) -> float:
-    '''Sums the total time for a given grip, then returns average reaction time'''
-    print("entering average_grip_time")
+    """Sums the total time for a given grip, then returns average reaction time"""
+    #print("entering average_grip_time")
     if grip_stats == []:
         return 0
     time = 0
     for stat in grip_stats:
-        time += difference_from_zero(stat.difference)
+        time += abs(stat.difference)
     if len(grip_stats) == 0:
         return 0
     average_grip_time = (time/len(grip_stats))
@@ -54,18 +55,18 @@ def average_grip_time(grip_stats: [Stat]) -> float:
 
 
 def gather_info(stat_list: [Stat]) -> [int]:
-    '''Use the stats to evaluate user performance, then determine what
-       correction needs to be taken'''
-    print("entering gather_info")
-    error_list = []
+    """Use the stats to evaluate user performance, then determine what
+       correction needs to be taken"""
+    #print("entering gather_info")
+    #error_list = []                            # Not currently checking for errors
     grip_1_list = []
     grip_2_list = []
     grip_3_list = []
     grip_4_list = []
     grip_5_list = []
     for stat in stat_list:
-        if stat.expected != stat.actual:
-            error_list.append(stat)
+        #if stat.expected != stat.actual:       # In future may use errors to explain which grips the user has the
+        #    error_list.append(stat)                hardest time with
         if stat.expected == 1:
             grip_1_list.append(stat)
         elif stat.expected == 2:
@@ -85,9 +86,9 @@ def gather_info(stat_list: [Stat]) -> [int]:
     return [grip_1_avg, grip_2_avg, grip_3_avg, grip_4_avg, grip_5_avg]
 
 
-def evaluate_info(grip_times: [int], last_worst_grip: int) -> int:
-    '''Determines which grip needs the most focus'''
-    print("entering evaluate info")
+def evaluate_worst_grip(grip_times: [int], last_worst_grip: int) -> int:
+    """Determines which grip needs the most focus"""
+    #print("entering evaluate info")
     current = 0
     worst_grip = 0
     i = 0
@@ -102,8 +103,8 @@ def evaluate_info(grip_times: [int], last_worst_grip: int) -> int:
 
 
 def evaluate_best_grip(grip_times: [int]) -> int:
-    '''Determines which grip the user is most proficient with'''
-    print("entering evaluate_best_grip")
+    """Determines which grip the user is most proficient with"""
+    #print("entering evaluate_best_grip")
     current = 9001
     best_grip = 0
     i = 0
@@ -119,9 +120,9 @@ def evaluate_best_grip(grip_times: [int]) -> int:
 
 
 def what_song(grips: int) -> str:
-    '''Takes the number of grips for the past song, returns the name of the song within +/- 5 grips of it.
-    '''
-    print('entering what song? Grips= ' + str(grips))
+    """Takes the number of grips for the past song, returns the name of the song within +/- 5 grips of it.
+    """
+    #print('entering what song? Grips= ' + str(grips))
     #Dict of songs with associated number of grips
     SONGS = {"In Your Eyes" : 145,
              "Goin' Fishing" : 132,
@@ -153,7 +154,7 @@ if __name__ == '__main__':
                 ['2', '2', '-40.394000000000233'], ['3', '3', '-26.370999999999185'], ['2', '2', '-60.347999999998137'],
                 ['1', '1', '-45.665999999997439'], ['2', '2', '-30.98399999999674'], ['1', '1', '11.744000000006054']]
     test_info = gather_info(parse_csv(test_csv))
-    print(Mglove_str_gen.worst_grip_str_generator(evaluate_info(gather_info(parse_csv(test_csv)), 0)))
-    print(Mglove_str_gen.worst_grip_str_generator(evaluate_info(gather_info(parse_csv(test_csv)), 4)))
-    print(Mglove_str_gen.worst_grip_str_generator(evaluate_info(gather_info(parse_csv(test_csv)), 1)))
-    print(Mglove_str_gen.summary_generator(evaluate_info(test_info, 0), evaluate_best_grip(test_info)))
+    print(Mglove_str_gen.worst_grip_str_generator(evaluate_worst_grip(gather_info(parse_csv(test_csv)), 0)))
+    print(Mglove_str_gen.worst_grip_str_generator(evaluate_worst_grip(gather_info(parse_csv(test_csv)), 4)))
+    print(Mglove_str_gen.worst_grip_str_generator(evaluate_worst_grip(gather_info(parse_csv(test_csv)), 1)))
+    print(Mglove_str_gen.summary_generator(evaluate_worst_grip(test_info, 0), evaluate_best_grip(test_info)))

@@ -15,17 +15,17 @@ LOCAL_RIVA_LOG = "C:\\Users\\Nathan\\Desktop\\CalPlug\\RIVA_log.txt"
 NO_VOICE_LOG = "Z:\\musicglove\\resources\\saves\\temp\\NORIVA_log.txt"
 
 def txt_to_NPCEditor(turn_id, text_str) -> None:
-    '''takes given text string and turns it into a VHToolkit vrSpeech call
+    """takes given text string and turns it into a VHToolkit vrSpeech call
     vrSpeech start turn_id user
     vrSpeech finished-speaking turn_id
     vrSpeech interp turn_id 1 1 text_str
     vrSpeech asr-complete turn_id
-    '''
+    """
     pass
 
 def ispeech_formatter(text_str) -> None:
-    ''' Replaces all the spaces ' ' in a string, with pluses '+'
-    '''
+    """ Replaces all the spaces ' ' in a string, with pluses '+'
+    """
     print("entering text_str_translator")
     translated_string = text_str.replace(' ', '+')
     return translated_string
@@ -45,7 +45,7 @@ def text_to_ispeech(text_str) -> None:
 
 
 def play_sound(filename: str) -> None:
-    '''Plays the Feedback from the virtual trainer'''
+    """Plays the Feedback from the virtual trainer"""
     AudioSegment.converter = 'C:\\vhtoolkit\\bin\\FFmpeg\\bin\\ffmpeg.exe'
     song = AudioSegment.from_mp3(filename)
     song.export("test.wav", format='wav')
@@ -61,8 +61,8 @@ def reset_RIVA_log() -> None:
 
 
 def text_to_RIVA(msg_number: int, worst_grip: int, best_grip: int) -> None:
-    '''takes a number representing how many messages have been sent this song, and a txt string. formats it for RIVA
-    '''
+    """takes a number representing how many messages have been sent this song, and a txt string. formats it for RIVA
+    """
     # for best grip if a best grip str will not be included, put a five in its place.
     print("entering text_to_RIVA")
     message = RIVA_translator(msg_number,worst_grip,best_grip)
@@ -72,8 +72,8 @@ def text_to_RIVA(msg_number: int, worst_grip: int, best_grip: int) -> None:
 
 
 def to_no_voice_log(message: str) -> None:
-    ''' Takes a worst and best grips, then sends them to Musicglove's logfile
-    '''
+    """ Takes a worst and best grips, then sends them to Musicglove's logfile
+    """
     print("entering to_no_voice_log")
     with open(NO_VOICE_LOG, 'w', newline= '\n') as outfile:
         outfile.write(message)
@@ -81,16 +81,16 @@ def to_no_voice_log(message: str) -> None:
 
 
 
-"""
+'''
 def Old_text_to_RIVA(msg_number: int, text_str: str) -> None:
-    '''takes a number representing how many messages have been sent this song, and a txt string. formats it for RIVA
-    '''
+    """takes a number representing how many messages have been sent this song, and a txt string. formats it for RIVA
+    """
     # for best grip if a best grip str will not be included, put a five in its place.
     print("entering text_to_RIVA")
     with open(RIVA_LOG, 'w', newline= '\n') as outfile:
         outfile.write('NewData:{};{}\r\n'.format(str(msg_number), text_str))
         print('NewData:{};{}\r\n'.format(str(msg_number), text_str))
-"""
+'''
 
 
 
@@ -105,4 +105,3 @@ if __name__ == '__main__':
     text_to_RIVA(3,2,0)
     text_to_RIVA(4,4,0)
     text_to_RIVA(5,5,3)
-    reset_RIVA_log()
