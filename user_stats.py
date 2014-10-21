@@ -43,21 +43,30 @@ class User_Stats:
         self.set_difference()
         self.set_overall_avg()
 
-    def get_grip_avg(self, grip_number: int) -> float:
-        """ Takes an int representing a grip, and returns that grips average"""
+    def get_grip_avg(self, grip_number=0, grip=None, old=False) -> float:
+        """ Takes an int (1-5), or a string ('worst' or 'best'), representing a grip and returns that grip's average"""
+        #print("entering get_grip_avg()")
         avgs = [self._red_avg, self._blue_avg, self._green_avg, self._purple_avg, self._yellow_avg]
-        for i in range(1,5):
-            if i == grip_number:
-                print("i="+ str(i))
-                return avgs[i]
-
+        if old == True:
+            avgs = [self._old_red_avg, self._old_blue_avg, self._old_green_avg, self._old_purple_avg, self._old_yellow_avg]
+        if grip_number != 0:
+            #print("grip_number = ", grip_number)
+            for i in range(5):
+                if i == grip_number-1:
+                    #print("grip_number = ", grip_number)
+                    #print("avgs[{}] = {}".format(i+1,avgs[i]))
+                    return avgs[i]
+        elif grip == "best":
+            return min(avgs)
+        return max(avgs)
+    '''
     def get_old_grip_avg(self, grip_number: int) -> float:
         """ Takes an int representing a grip, and returns that grips average"""
         avgs = [self._old_red_avg, self._old_blue_avg, self._old_green_avg, self._old_purple_avg, self._old_yellow_avg]
         for i in range(1,5):
-            if i == grip_number:
+            if i == grip_number-1:
                 return avgs[i-1]
-
+    '''
     def _new_overall_avg(self):
         """ Calculates the new_overall average
         """
@@ -96,7 +105,7 @@ class User_Stats:
     def overall_avg_feedback(self):
         """ Assigns feedback relating to the overall average of all griptimes.
         """
-        print("entering overall_avg_feedback")
+        #print("entering overall_avg_feedback")
         #If the difference between the past and current overall grip averages is negative then return improved feedback
         if self._difference.overall >= 0:
             return "overall_improvment_feedback"
@@ -110,7 +119,7 @@ class User_Stats:
     def grip_feedback(self):
         """ Check to see which grip has the largest difference between the past and present 30 seconds
         """
-        print("entering grip_feedback")
+        #print("entering grip_feedback")
         test, result = self._difference.red, 'red'
         if test < self._difference.blue:
             test, result = self._difference.blue, 'blue'
@@ -140,7 +149,7 @@ class User_Stats:
     def select_feedback(self):
         """ Figure out whether to use overall feedback or feedback for a specific grip
         """
-        print("entering select_feedback")
+        #print("entering select_feedback")
         if self._followup != None:
             return self.followup_feedback()
         #print(max(self._difference.red,    self._difference.blue, self._difference.green,

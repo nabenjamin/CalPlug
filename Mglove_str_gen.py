@@ -8,7 +8,7 @@ from time import strftime, gmtime
 Notes:
 - Added strings lending more interactivity to the system: "POSITIVE_STRING", "NEGATIVE_STRING", "TRAINING_PROMPT",
     "TRAINING_RESPONSE" and "OVERALL_SUMMARY".
-    (commented out until ready for implimentation, need to remove level numbers or instantiate a type [such as namedtuple])
+    (commented out until ready for implementation, need to remove level numbers or instantiate a type [such as namedtuple])
 '''
 
 # Grip list
@@ -19,31 +19,31 @@ GRIP_4 = 'Purple Grip'
 GRIP_5 = 'Yellow Grip'
 
 '''
+    “Your response time is improving!”
+    “Your overall response time has gotten much better!”
 POSITIVE_STRING = [
-
     1 = [
         “YOU’RE DOING WELL, BUT I KNOW YOU CAN DO BETTER.”,
         “LOOKS LIKE YOU KNOW WHAT YOU’RE DOING. KEEP IT UP!”,
-        “PRETTY GOOD JOB ON THAT LAST SET, KEEP GOING!”, 
-        “YOU’RE GETTING BETTER, KEEP ON GOING!”, 
+        “PRETTY GOOD JOB ON THAT LAST SET, KEEP GOING!”,
+        “YOU’RE GETTING BETTER, KEEP ON GOING!”,
     ],
-
     2 = [
         "GOOD WORK KEEP IT UP!",
         “THAT LAST SET WAS GOOD WORK!”,
         “FINE JOB ON THAT LAST SET.”,
         "SOLID WORK, YOU'RE DOING REALLY WELL"
     ],
-
     3 = [
         “YOU’RE PLAYING AMAZINGLY! EVEN I’M IMPRESSED, AND I’M A ROBOT.”,
-        “YOU REALIZE YOUR LAST SET WAS PERFECT, RIGHT?”,     
+        “YOU REALIZE YOUR LAST SET WAS PERFECT, RIGHT?”,
         “WELL DONE, YOUR RESPONSE TIMES ARE UNCANNILY RAPID.”,
         “NOW THAT’S WHAT I CALL ACCURATE!”
     ],
-
 ]
 
+    "What’s going on?! You’re starting to slow down!”
+    “You’re starting to slow down. Get your head in the game!”
 NEGATIVE_STRING = [
     1 = [
         “NOT BAD, BUT I’M SURE YOU’LL DO BETTER ON THE NEXT SET.”,
@@ -51,27 +51,24 @@ NEGATIVE_STRING = [
         “THAT LAST SET WAS OK, BUT WE CAN DO BETTER.”
         “JUST A BIT SLOWER BACK THERE, BUT YOU’RE DOING WELL!”
     ],
-
     2 = [
         “YEAH, THAT LAST SET WAS A BIT OF A TOUGH ONE, LET’S GIVE IT ANOTHER GO.”,
         “A BIT SLOW ON THAT LAST SET, BUT WE’RE GETTING BETTER.”
         “JUST A BRIEF HICCUP ON THAT LAST ONE, BUT NOTHING TO WORRY ABOUT, I SHOULD THINK.”,
         “THAT LAST SET COULD HAVE GONE A LITTLE BETTER, BUT THAT’S ALRIGHT, WE’LL GET IT NEXT TIME!”
     ],
-       
     3 = [
         “YOU’RE SLOWING DOWN A LITTLE BIT, TRY FOCUSING ON THE POINT WHEN THE BOTTOM OF THE CIRCLE LINES UP WITH THE TARGET!”,
         “PHEW, THAT LAST SET REALLY WAS A DOOZY, BUT DON’T WORRY WE’LL GET BACK ON TRACK.”,
         “THAT LAST PART WAS PRETTY HARD, DON’T SWEAT IT TOO MUCH THOUGH.”
         “YEAH THOSE LAST FEW MEASURES SCARED ME TOO.”
     ],
-
 ]
 
 TRAINING_PROMPT = [
-    “So I noticed on that last playthrough that you’re doing great with Grip “ “! Grip “ “ is a bit slower, however, so I’d focus a bit more on that one for now.”,
-    “Overall, that was a great playthrough, but I noticed you were having trouble with Grip “ “. Why don’t we focus on that one for the next song?”,
-    “Great work. We could still do a little more work on Grip “ “ though. Let’s try and focus on that for a little bit.”
+    “So... I noticed on that last playthrough that you’re doing great with the {Grip} is a bit slower, so let's focus a bit more on that one for now.”,
+    “Overall, that was a great playthrough, but I noticed you were having trouble with {Grip}. Why don’t we focus on that one for the next few measures?”,
+    “Great work. We could still do a little more work on the {Grip} though. So Let’s try and focus on that for a little bit.”
 ]
 
 POS_TRAINING_RESPONSE = [
@@ -92,6 +89,13 @@ OVERALL_SUMMARY = [
     “You’ve really got this song down haven’t you?”
 ]
 '''
+
+TRAINING_PROMPT_LIST = [
+    "So... I noticed on that last playthrough that the {Grip} got a bit slower, so let's focus on that one for now.",
+    "Overall, that was a great playthrough, but I noticed you were having trouble with {Grip}. Why don’t we focus on that one for the next few measures?",
+    "Great work. We could still do a little more work on the {Grip} though. So let’s try and focus on that for a little bit."
+]
+
 ENCOURAGEMENT_STR_LIST = [
     'You are doing very well!',
     'Good job on that last set!',
@@ -117,13 +121,18 @@ BEST_GRIP_STR_LIST = [
     "you are doing great with the"
 ]
 
-def training_response(last_worst_grip: int, old_worst_grip_avg: float, new_worst_grip_avg: float) -> str:
-    """ Takes the worst grip, it's average, and it's average last session. Checks for improvement, then returns an appropriate string
+
+def training_response(last_worst_grip: int, old_worst_grip_avg: float, new_worst_grip_avg: float) -> (str, str):
+    """ Takes the worst grip, it's average, and it's average last session. Checks for improvement, then returns an
+        appropriate string and whether the response was positive or negative
         if there was improvement congratulate them.
         Else recommit them, note that system asked for a given outcome... or simply call training_prompt()?
         pass failure/success to select_response() function
     """
-    pass
+    if old_worst_grip_avg < new_worst_grip_avg:
+        return ("training_prompt", training_prompt(last_worst_grip))
+    return ("training_response", "positive_training_response({})".format(grip_selector(last_worst_grip)))
+
 
 def negative_response() -> str:
     """ Returns a scaled negative response                                              # Need to define scale
@@ -138,7 +147,7 @@ def positive_response() -> str:
 def training_prompt(last_worst_grip: int) -> str:
     """Takes a worst grip and provides a string prompting user to improve that grip
     """
-    pass
+    return TRAINING_PROMPT_LIST[randrange(len(TRAINING_PROMPT_LIST))].format(Grip = grip_selector(last_worst_grip))
 
 def grip_avg_summary_str(grip_avg_list: list) -> str:
     """ returns a string showing the average times for all grips (includes grips that may have been unused this song)
@@ -154,15 +163,15 @@ def encouraging_str_generator() -> str:
 
 
 def worst_grip_str_generator(worst_grip: int) -> str:
-    """Join an encouragement string with an appropriate finger string"""
+    """Join an encouragement string with an appropriate worst grip string"""
     grip_string = ('{} {}.'.format(WORST_GRIP_STR_LIST[randrange(len(WORST_GRIP_STR_LIST))], grip_selector(worst_grip)))
-    print('system time = {}'.format(strftime("%H;%M;%S")))
+    #print('system time = {}'.format(strftime("%H;%M;%S")))
     return '{} {} {}'.format(encouraging_str_generator(), WORST_GRIP_STR_LIST[randrange(len(
         WORST_GRIP_STR_LIST))], grip_selector(worst_grip))
 
 
 def grip_selector(grip):
-    """ Returns the string corresponding to the grip number of(grip)
+    """ Returns the string representation of the grip's color corresponding to the grip number of(grip)
     """
     if grip == 1:
         return GRIP_1
@@ -180,19 +189,21 @@ def grip_selector(grip):
 def summary_generator(worst_grip: int, best_grip: int) -> str:
     """ Returns 3 sentences: an encouragement_str, worst_grip_str, best_grip_str
     """
-    print("Entering summary_generator()")
+    #print("Entering summary_generator()")
     return '{} {} {}!'.format(worst_grip_str_generator(worst_grip),
                             BEST_GRIP_STR_LIST[randrange(len(BEST_GRIP_STR_LIST))],
                             grip_selector(best_grip))
 
-def RIVA_translator(msg_number: int, worst_grip: int, best_grip: int) -> str:
+def RIVA_translator(msg_number: int, worst_grip: int, best_grip: int, RIVA_direc, message='') -> str:
     """ Takes a generated feedback string, prepends number for RIVA's facial generator
     """
     if best_grip == 0:
         best_grip_str = 0
     else:
         best_grip_str = str(randrange(1,len(BEST_GRIP_STR_LIST)+1)) + "_" + grip_selector(best_grip)[0]
-    return 'NewData:{};ENCOURAGEMENT:{};WORST_GRIP:{}_{};BEST_GRIP:{}'.format(
+    if best_grip == 0 and worst_grip == 0:
+        return 'NewData:{};Msg:{}'.format(str(msg_number), message)
+    return 'NewData:{};ENCOURAGEMENT:{};WORST_GRIP:{}_{};BEST_GRIP:{}'.format(              # Add RIVA_direc to the returned string
         str(msg_number),
         str(randrange(1,len(ENCOURAGEMENT_STR_LIST)+1)),
         str(randrange(1,len(WORST_GRIP_STR_LIST)+1)), grip_selector(worst_grip)[0],
@@ -214,9 +225,7 @@ def emo_less_feedback(msg_num: int, worst_grip: int, best_grip=0) -> str:
         result.append('')
     return "NewData:{};TTS:{}\n{}".format(msg_num,result[0],result[1])
 
-def training_response(last_worst_grip: int, last_worst_grip_avg: float) -> str:
-    """ Takes a grip and it's average, then evaluates if improvment has been made.
-    """
+
 if __name__ == '__main__':
     print('RIVA_translator() = ',RIVA_translator(1,3,0))
     print('RIVA_translator() = ',RIVA_translator(2,1,5))

@@ -23,7 +23,7 @@ def txt_to_NPCEditor(turn_id, text_str) -> None:
     """
     pass
 
-def ispeech_formatter(text_str) -> None:
+def ispeech_formatter(text_str: str) -> None:
     """ Replaces all the spaces ' ' in a string, with pluses '+'
     """
     print("entering text_str_translator")
@@ -31,10 +31,10 @@ def ispeech_formatter(text_str) -> None:
     return translated_string
 
 
-def text_to_ispeech(text_str) -> None:
+def text_to_ispeech(text_str: str) -> None:
     developer_trial_version = 'http://api.ispeech.org/api/rest?apikey=developerdemokeydeveloperdemokey&action=convert&voice=usenglishfemale&format=mp3&filename=myaudiofile&text='
     actual_server_info = 'http://api.ispeech.org/api/rest?apikey=18cf918d69404c654f6a7fb037302c67&action=convert&voice=usenglishfemale&speed=0&format=mp3&text='
-    print("entering text_to_ispeech")
+    #print("entering text_to_ispeech")
     URL = (developer_trial_version + text_str)
     mp3file = urllib.request.urlopen(URL)
     output = open('test.mp3','wb')
@@ -54,27 +54,27 @@ def play_sound(filename: str) -> None:
 
 
 def reset_RIVA_log() -> None:
-    print("entering reset_RIVA_log")
+    #print("entering reset_RIVA_log")
     with open(RIVA_LOG, 'w') as file:
         file.write("NewData:0;ENCOURAGEMENT:0;WORST_GRIP_STR:0;WORST_GRIP:0;BEST_GRIP_STR:0;BEST_GRIP:0")
-        print("NewData:0;ENCOURAGEMENT:0;WORST_GRIP_STR:0;WORST_GRIP:0;BEST_GRIP_STR:0;BEST_GRIP:0")
+        #print("NewData:0;ENCOURAGEMENT:0;WORST_GRIP_STR:0;WORST_GRIP:0;BEST_GRIP_STR:0;BEST_GRIP:0")
 
 
-def text_to_RIVA(msg_number: int, worst_grip: int, best_grip: int) -> None:
+def text_to_RIVA(msg_number: int, worst_grip: int, best_grip: int, RIVA_direction, msg='') -> None:
     """takes a number representing how many messages have been sent this song, and a txt string. formats it for RIVA
     """
     # for best grip if a best grip str will not be included, put a five in its place.
-    print("entering text_to_RIVA")
-    message = RIVA_translator(msg_number,worst_grip,best_grip)
+    #print("entering text_to_RIVA")
+    RIVA_message = RIVA_translator(msg_number,worst_grip,best_grip,RIVA_direction, message=msg)
     with open(RIVA_LOG, 'w', newline= '\n') as outfile:
-        outfile.write(message)
-        print(message)
+        outfile.write(RIVA_message)
+        print(RIVA_message)
 
 
 def to_no_voice_log(message: str) -> None:
     """ Takes a worst and best grips, then sends them to Musicglove's logfile
     """
-    print("entering to_no_voice_log")
+    #print("entering to_no_voice_log")
     with open(NO_VOICE_LOG, 'w', newline= '\n') as outfile:
         outfile.write(message)
         print(message)
