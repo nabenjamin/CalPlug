@@ -4,7 +4,7 @@ __author__ = 'Nathan'
 
 ### if overall avg <0 tell user they're reacting too early
 ### if overall avg >0 tell user they're reacting too late
-
+import statistics
 from Interface import gather_info, parse_csv, evaluate_worst_grip, evaluate_best_grip, what_song
 from collections import namedtuple
 Difference = namedtuple('Difference', 'red blue green purple yellow overall')
@@ -42,6 +42,20 @@ class User_Stats:
         self._yellow_avg = grips[4]
         self.set_difference()
         self.set_overall_avg()
+
+    def getScalePoints(userList)
+        """Returns a list of four points which represent the boundaries of the user scale"""
+        sortedList = sorted(userList)
+
+        quartileOne = statistics.median_low(sortedList)
+        quartileTwo = statistics.medial_high(sortedList)
+        mininum = sortedList[0]
+        maximum = sortedList[len(sortedList)-1]
+        
+        pointsList = [mininum, quartileOne, quartileTwo, maximum]
+
+        return pointsList
+    
 
     def get_grip_avg(self, grip_number=0, grip=None, old=False) -> float:
         """ Takes an int (1-5), or a string ('worst' or 'best'), representing a grip and returns that grip's average"""
