@@ -1,25 +1,23 @@
 __author__ = 'Nathan'
 ### Nathanial Benjamin, UCI, Calit2, CalPlug, 2014-Feb
-### Nathanial Benjamin, UCI, Calit2, CalPlug, 2014-Feb
+# Written in Python 3.3.3 (added statistics and pydub modules)
 
 
 import csv
 from time import strftime
 
 ### The file where user grip data for current song is stored
-MUSICGLOVE = 'Z:\\musicglove\\resources\\saves\\temp\\temp.csv'
-MY_COMP = 'C:\\Users\\Nathan\\Desktop\\CalPlug\\temp.csv'
+#MUSICGLOVE = 'Z:\\musicglove\\resources\\saves\\temp\\temp.csv'                                         # CalPlug server
+MUSICGLOVE = 'C:\\Users\\Nathan\\Desktop\\CalPlug\\RIVA\\musicglove3\\resources\\saves\\temp\\temp.csv' # Local Computer
 
 ### Sets a unique timestamped filename, in the summaries directory, for the stats of the current song
+#M_GLOVE_SUMMARIES = "Z:\\musicglove\\summaries\\"                                     # CalPlug server
+M_GLOVE_SUMMARIES = "C:\\Users\\Nathan\\Desktop\\CalPlug\\RIVA\\musicglove3\\summaries\\" # Local Computer
 TIMESTAMP = strftime("%a,%d_%b_%Y_%H;%M;%S")
 def current_time():
-    return(strftime("%a,%d_%b_%Y_%H;%M;%S"))
-M_GLOVE_SUMMARIES = "Z:\\musicglove\\summaries\\"
-MY_SUMMARIES = "C:\\Users\\Nathan\\Desktop\\CalPlug\\summaries\\{}.txt".format(
-        strftime("%a,%d_%b_%Y_%H;%M;%S"))
+    return strftime("%a,%d_%b_%Y_%H;%M;%S")
 
-
-def read_csv(file_path: str) -> list:
+def read_csv(file_path: str, test = False) -> list:
     """Read data from a .csv file, and return a list containing
        the actual and expected fingers, and the time difference from expected.
     """
@@ -28,10 +26,14 @@ def read_csv(file_path: str) -> list:
     with open(file_path, 'r') as infile:
 
         for line in infile:
+            #if test == True:
+                #print("line =", line)
+                #print('line.strip().split(",") = ', line.strip().split(","))
             temp_stat = line.strip().split(",")
             stat_list.append(temp_stat)
+        #if test == True:
+            #print("stat_list = ", stat_list)
     return stat_list
-
 
 def make_csv(stat_list: list, filename: str, optional_str=''):
     """ Takes a list of stats and/or strings and writes them into .csv file format
@@ -39,7 +41,7 @@ def make_csv(stat_list: list, filename: str, optional_str=''):
     """
     #print("entering make_csv")
     #print(len(read_csv(MUSICGLOVE)))
-    if filename == MY_SUMMARIES or filename == M_GLOVE_SUMMARIES:
+    if filename == M_GLOVE_SUMMARIES:
         filename += "{}.csv".format(strftime("%a,%d_%b_%Y_%H;%M;%S"))
         #print(filename)
     with open(filename, 'w', newline='') as csvfile:
@@ -55,8 +57,6 @@ def make_csv(stat_list: list, filename: str, optional_str=''):
             else:
                 csv_writer.writerow(i)
     return
-
-
 
 
 if __name__ == '__main__':

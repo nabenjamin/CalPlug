@@ -1,11 +1,12 @@
 __author__ = 'Nathan'
 ### Nathanial Benjamin, UCI, Calit2, CalPlug, 2014-Feb
+# Written in Python 3.3.3 (added statistics and pydub modules)
 
 ### The MusicGlove interface: evaluates a csv file's data and converts that data into statistics telling how well the
 ###    user is preforming, then returns a string giving encouragement and advice.
 
 '''
-currently when incorrect input is done 'nan' is being interpreted as 300 50% more than the maximum late grip
+currently when incorrect input is done 'nan' is being interpreted as 300 (the maximum late grip)
     -how much should nan be worth, compared to a slow response?
 '''
 
@@ -33,13 +34,6 @@ def parse_csv(infile: "stat_list") -> [Stat]:
             pass
     return stat_list
 
-def difference_from_zero(time: float) -> float:
-    """calculates the difference from zero"""
-    if time >= 0:
-        return time
-    elif time < 0:
-        return (0 - time)
-
 def average_grip_time(grip_stats: [Stat]) -> float:
     """Sums the total time for a given grip, then returns average reaction time"""
     #print("entering average_grip_time")
@@ -53,8 +47,7 @@ def average_grip_time(grip_stats: [Stat]) -> float:
     average_grip_time = (time/len(grip_stats))
     return average_grip_time
 
-
-def gather_info(stat_list: [Stat]) -> [int]:
+def gather_info(stat_list: [Stat]) -> [float]:
     """Use the stats to evaluate user performance, then determine what
        correction needs to be taken"""
     #print("entering gather_info")
@@ -85,6 +78,20 @@ def gather_info(stat_list: [Stat]) -> [int]:
     grip_5_avg = average_grip_time(grip_5_list)
     return [grip_1_avg, grip_2_avg, grip_3_avg, grip_4_avg, grip_5_avg]
 
+def grip_times(stat_list: [Stat]) -> [float]:
+    """ Takes a list of Stats, removes expected and actual grips, returns a list of grip times
+    """
+    return [i.difference for i in parse_csv(stat_list)]
+
+def min_and_max_grip(stat_list: [Stat]) -> (float):
+    """ Returns the user's fastest and slowest grip instance in a given time period"""
+    result = (1,300)
+    try:
+        result = (min([abs(i.difference) for i in parse_csv(stat_list)]),
+                 max([abs(i.difference) for i in parse_csv(stat_list)]))
+    except ValueError:
+        result = (1,300)
+    return result
 
 def evaluate_worst_grip(grip_times: [int], last_worst_grip: int) -> int:
     """Determines which grip needs the most focus"""
@@ -101,7 +108,6 @@ def evaluate_worst_grip(grip_times: [int], last_worst_grip: int) -> int:
             worst_grip = i
     return worst_grip
 
-
 def evaluate_best_grip(grip_times: [int]) -> int:
     """Determines which grip the user is most proficient with"""
     #print("entering evaluate_best_grip")
@@ -117,7 +123,6 @@ def evaluate_best_grip(grip_times: [int]) -> int:
             best_grip = i
             #print("best grip =", best_grip)
     return best_grip
-
 
 def what_song(grips: int) -> str:
     """Takes the number of grips for the past song, returns the name of the song within +/- 5 grips of it.
@@ -137,6 +142,11 @@ def what_song(grips: int) -> str:
             #print(key)
             return "Song Played: " + key + '\n'
     return "Unrecognized Song\n"
+
+def abs_val_list(user_list: []) -> []:
+    '''takes a list of floats or ints, takes the abs() of each item and makes a new list'''
+    return [abs(i) for i in user_list]
+
 
 if __name__ == '__main__':
     test_csv = [['1', '1', '-16.823999999999614'], ['4', '4', '-35.30199999999968'], ['3', '3', '-85.779999999999745'],
