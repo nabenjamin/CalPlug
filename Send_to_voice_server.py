@@ -8,22 +8,15 @@ from urllib import request
 import winsound
 from pydub import AudioSegment
 from Mglove_str_gen import RIVA_translator, emo_less_feedback
+import Mglove_str_gen as MGStr
 ###     Note: pydub requires FFmpeg to convert audio files, make sure it is on the host computer.
 
 ### RIVA log file
 #RIVA_LOG = "Z:\\musicglove\\resources\\saves\\temp\\RIVA_log.txt"
-RIVA_LOG = "C:\\Users\\Nathan\\Desktop\\CalPlug\\RIVA\\musicglove3\\resources\\saves\\temp\\RIVA_log.txt"
+RIVA_LOG = "C:\\MusicGlove\\musicglove_1366x768\\resources\\saves\\temp\\RIVA_log.txt"
 #NO_VOICE_LOG = "Z:\\musicglove\\resources\\saves\\temp\\NORIVA_log.txt"
-NO_VOICE_LOG = "C:\\Users\\Nathan\\Desktop\\CalPlug\\RIVA\\musicglove3\\resources\\saves\\temp\\NORIVA_log.txt"         # (local computer)
+NO_VOICE_LOG = "C:\\MusicGlove\\musicglove_1366x768\\resources\\saves\\temp\\NORIVA_log.txt"         # (local computer)
 
-def txt_to_NPCEditor(turn_id, text_str) -> None:
-    """takes given text string and turns it into a VHToolkit vrSpeech call
-    vrSpeech start turn_id user
-    vrSpeech finished-speaking turn_id
-    vrSpeech interp turn_id 1 1 text_str
-    vrSpeech asr-complete turn_id
-    """
-    pass
 
 def ispeech_formatter(text_str: str) -> None:
     """ Replaces all the spaces ' ' in a string, with pluses '+'
@@ -56,7 +49,7 @@ def play_sound(filename: str) -> None:
 def reset_RIVA_log() -> None:
     #print("entering reset_RIVA_log")
     with open(RIVA_LOG, 'w') as file:
-        file.write("NewData:0;ENCOURAGEMENT:0;WORST_GRIP_STR:0;WORST_GRIP:0;BEST_GRIP_STR:0;BEST_GRIP:0")
+        file.write('Iteration:0;Expression:0;TTS:Welcome_str')
         #print("NewData:0;ENCOURAGEMENT:0;WORST_GRIP_STR:0;WORST_GRIP:0;BEST_GRIP_STR:0;BEST_GRIP:0")
 
 def text_to_RIVA(msg_number: int, worst_grip: int, best_grip: int, RIVA_direction, msg='') -> None:
@@ -91,7 +84,27 @@ def Old_text_to_RIVA(msg_number: int, text_str: str) -> None:
 
 
 if __name__ == '__main__':
+    print("To run experiments please run 'RIVA_Main.py'")
+    '''
+    for scale in MGStr.NEGATIVE_STRING:
+        for j in scale:
+            print(j)
+            text_to_ispeech(ispeech_formatter(j))
+    for scale in MGStr.POSITIVE_STRING:
+        for j in scale:
+            print(j)
+            text_to_ispeech(ispeech_formatter(j))
+    '''
+    for i in MGStr.OVERALL_SUMMARY:
+        text_to_ispeech(ispeech_formatter(i))
+    for i in MGStr.TRAINING_PROMPT_LIST:
+        text_to_ispeech(ispeech_formatter(i))
+    for i in MGStr.POS_TRAINING_RESPONSE:
+        text_to_ispeech(ispeech_formatter(i))
+    for i in MGStr.NEG_TRAINING_RESPONSE:
+        text_to_ispeech(ispeech_formatter(i))
     test = 'Keep up the good work! I noticed that you were having a little trouble with the Blue Grip. But I also noticed you have improved quite a bit on the Yellow Grip!'
     print(test)
     print(ispeech_formatter(test))
     text_to_ispeech(ispeech_formatter(test))
+    print("To run experiments please run 'RIVA_Main.py'")

@@ -149,6 +149,7 @@ def abs_val_list(user_list: []) -> []:
 
 
 if __name__ == '__main__':
+    print("To run experiments please run 'RIVA_Main.py'")
     test_csv = [['1', '1', '-16.823999999999614'], ['4', '4', '-35.30199999999968'], ['3', '3', '-85.779999999999745'],
                 ['3', '3', '5.2640000000001237'], ['3', '3', '18.786000000000058'], ['2', '2', '48.307999999999993'],
                 ['2', '2', '13.829999999999927'], ['3', '3', '42.113000000001193'], ['2', '2', '39.39600000000064'],
@@ -168,3 +169,4 @@ if __name__ == '__main__':
     print(Mglove_str_gen.worst_grip_str_generator(evaluate_worst_grip(gather_info(parse_csv(test_csv)), 4)))
     print(Mglove_str_gen.worst_grip_str_generator(evaluate_worst_grip(gather_info(parse_csv(test_csv)), 1)))
     print(Mglove_str_gen.summary_generator(evaluate_worst_grip(test_info, 0), evaluate_best_grip(test_info)))
+    print("To run experiments please run 'RIVA_Main.py'")

@@ -12,7 +12,7 @@ from user_stats import User_Stats
 
 
 #CSV_FILE = 'Z:\\musicglove\\resources\\saves\\temp\\temp.csv'
-#CSV_FILE = 'C:\\Users\\Nathan\\Desktop\\CalPlug\\temp.csv'
+CSV_FILE = "C:\\MusicGlove\\musicglove_1366x768\\resources\\saves\\temp\\temp.csv"
 
 
 class N_test:
@@ -125,14 +125,14 @@ class N_test:
                 sleep(1)
             print("expect Negative")
             grip_list = grip_times(parse_csv(read_csv(CSV_functions.MUSICGLOVE)))
-            user_stats = User_Stats()
+            user_stats = User_Stats(new_song=False)
             for i in range(32):
                 seconds-=1
                 self.update_csv(self.chosen_grip(grip_number,1))
                 sleep(1)
             print("expect Positive")
             grip_list = grip_times(parse_csv(read_csv(CSV_functions.MUSICGLOVE)))
-            user_stats = User_Stats()
+            user_stats = User_Stats(new_song=False)
             for i in range(7):
                 seconds-=5
                 self.update_csv(self.chosen_grip(1,250))
@@ -141,7 +141,7 @@ class N_test:
                 sleep(5)
             print("expect red prompt")
             grip_list = grip_times(parse_csv(read_csv(CSV_functions.MUSICGLOVE)))
-            user_stats = User_Stats()
+            user_stats = User_Stats(new_song=False)
             for i in range(7):
                 seconds-=5
                 self.update_csv(self.chosen_grip(1,300))
@@ -150,7 +150,7 @@ class N_test:
                 sleep(5)
             print("expect Negative red response")
             grip_list = grip_times(parse_csv(read_csv(CSV_functions.MUSICGLOVE)))
-            user_stats = User_Stats()
+            user_stats = User_Stats(new_song=False)
             for i in range(7):
                 seconds-=5
                 self.update_csv(self.chosen_grip(1,150))
@@ -159,7 +159,7 @@ class N_test:
                 sleep(5)
             print("expect Positive red response")
             grip_list = grip_times(parse_csv(read_csv(CSV_functions.MUSICGLOVE)))
-            user_stats = User_Stats()
+            user_stats = User_Stats(new_song=False)
             for i in range(7):
                 seconds-=5
                 self.update_csv(self.chosen_grip(1,1))
@@ -169,9 +169,9 @@ class N_test:
         print("2nd simulated song is over")
 
     def tester3(self) -> None:
-        '''takes a predefined song file and adds it line by line to the log file'''
+        """Takes a predefined song file and adds it line by line to the log file"""
         temp_list = []
-        with open('C:\\Users\\Nathan\\Desktop\\CalPlug\\RIVA\\musicglove3\\resources\\saves\\temp\\test.csv', 'r', newline='') as infile:
+        with open('C:\\MusicGlove\\musicglove3\\resources\\saves\\temp\\temp.csv', 'r', newline='') as infile:
             csv_reader = csv.reader(infile, delimiter=',')
             for line in csv_reader:
                 if line == '':
@@ -202,8 +202,6 @@ if __name__ == "__main__":
     tester.tester1()
     grip_list = grip_times(parse_csv(read_csv(CSV_functions.MUSICGLOVE)))
     user_stats = User_Stats()
-    print("find_best_grip_scale = ",user_stats.find_best_grip_scale(grip_list))
-    print("find_worst_grip_scale = ",user_stats.find_worst_grip_scale(grip_list))
     sleep(40)
 
     tester.tester2()

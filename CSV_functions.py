@@ -8,11 +8,11 @@ from time import strftime
 
 ### The file where user grip data for current song is stored
 #MUSICGLOVE = 'Z:\\musicglove\\resources\\saves\\temp\\temp.csv'                                         # CalPlug server
-MUSICGLOVE = 'C:\\Users\\Nathan\\Desktop\\CalPlug\\RIVA\\musicglove3\\resources\\saves\\temp\\temp.csv' # Local Computer
+MUSICGLOVE = 'C:\\MusicGlove\\musicglove_1366x768\\resources\\saves\\temp\\temp.csv' # Local Computer
 
 ### Sets a unique timestamped filename, in the summaries directory, for the stats of the current song
 #M_GLOVE_SUMMARIES = "Z:\\musicglove\\summaries\\"                                     # CalPlug server
-M_GLOVE_SUMMARIES = "C:\\Users\\Nathan\\Desktop\\CalPlug\\RIVA\\musicglove3\\summaries\\" # Local Computer
+M_GLOVE_SUMMARIES = "C:\\MusicGlove\\musicglove_1366x768\\summaries\\" # Local Computer
 TIMESTAMP = strftime("%a,%d_%b_%Y_%H;%M;%S")
 def current_time():
     return strftime("%a,%d_%b_%Y_%H;%M;%S")
@@ -60,6 +60,7 @@ def make_csv(stat_list: list, filename: str, optional_str=''):
 
 
 if __name__ == '__main__':
+    print("To run experiments please run 'RIVA_Main.py'")
     from time import sleep
     test_result = ['Red Grip avg: 22.563200000001142; Blue Grip avg: 32.978142857142494;Green Grip avg: 27.25257142857195; Purple Grip avg: 60.543199999996794; Yellow Grip avg: 0',
                    'You have improved a lot! I noticed that you were having a little trouble with the Purple Grip',
@@ -74,3 +75,4 @@ if __name__ == '__main__':
     sleep(5)
     test_result.extend(read_csv(MUSICGLOVE))
     make_csv(test_result, M_GLOVE_SUMMARIES)
+    print("To run experiments please run 'RIVA_Main.py'")

@@ -4,7 +4,7 @@ __author__ = 'Nathan'
 
 ### if overall avg <0 tell user they're reacting too early
 ### if overall avg >0 tell user they're reacting too late
-''' When do we do training vs neg/pos
+''' When we do training vs neg/pos
     how do we implement the scale?
 '''
 
@@ -15,7 +15,9 @@ import statistics
 Difference = namedtuple('Difference', 'red blue green purple yellow')
 
 class User_Stats:
-    def __init__(self):
+    def __init__(self, neg_quart=25, pos_quart=25, new_song=True):
+        self.negative_quartile_range = neg_quart
+        self.positive_quartile_range = pos_quart
         self._old_red_avg = 0
         self._old_blue_avg = 0
         self._old_green_avg = 0
@@ -30,9 +32,26 @@ class User_Stats:
         self._overall_avg = 0
         self._difference = Difference(0,0,0,0,0)
         self._followup = None        # The grip which the user was last assigned to concentrate on.
+        if new_song == True:
+            self.set_quartile_ranges()
+        pass
 
-    def set_grips(self, grips: tuple):
-        """ Updates old grips to those from the last call, and sets the new grip averages to match those since the last call.
+    def set_quartile_ranges(self) -> None:
+        """ Updates the upper and lower quartile ranges. input should be the size of range required:
+                i.e. if you want to use the entire range over 75% you would enter 25 for positive feedback (75-100%)
+        """
+        self.positive_quartile_range = int(input("Please enter the percentage range for RIVA's positive feedback: "))
+        self.negative_quartile_range = int(input("Please enter the percentage range for RIVA's negative feedback: "))
+
+    def get_negative_quartile_range(self) -> int:
+        return self.negative_quartile_range
+
+    def positive_quartile_range(self) -> int:
+        return self.positive_quartile_range
+
+    def set_grips(self, grips: tuple) -> None:
+        """ Updates old grips to those from the last call,
+                and sets the new grip averages to match those since the last call.
         """
         #print("entering set_grips")
         self._old_red_avg = self._red_avg
@@ -53,7 +72,8 @@ class User_Stats:
         #print("entering get_grip_avg()")
         avgs = [self._red_avg, self._blue_avg, self._green_avg, self._purple_avg, self._yellow_avg]
         if old == True:
-            avgs = [self._old_red_avg, self._old_blue_avg, self._old_green_avg, self._old_purple_avg, self._old_yellow_avg]
+            avgs = [self._old_red_avg, self._old_blue_avg, self._old_green_avg,
+                    self._old_purple_avg, self._old_yellow_avg]
         if grip_number != 0:
             #print("grip_number = ", grip_number)
             for i in range(5):
@@ -108,20 +128,26 @@ class User_Stats:
     def get_difference(self) -> (float,float,float,float,float):
         return self._difference
 
+    def quartiles(self, qlist: list) -> [float,float]:
+        qlist.sort()
+        q1 = qlist[int(len(qlist)/100) * self.negative_quartile_range]
+        q2 = qlist[int((len(qlist)/100) * (100 - self.positive_quartile_range))]
+        return [q1,q2]
+
     def get_scale_points(self, userList: []) -> []:
         """Returns a list of four points which represent the boundaries of the user scale"""
         #print("userList = ", userList)
         sortedList = sorted(userList)
 
         if len(sortedList) == 0:            # if the list is empty
-            print("empty grip list in get_scale_points()")
+            #print("empty grip list in get_scale_points()")
             return [0,0,0,0]
-        quartileOne = statistics.median_low(sortedList)
-        quartileTwo = statistics.median_high(sortedList)
+        IQR = self.quartiles(sortedList)
         minimum = sortedList[0]
         maximum = sortedList[len(sortedList)-1]
-        #print('In get_scale_points(), Minimum = {} Maximum = {}'.format(minimum, maximum))
-        pointsList = [minimum, quartileOne, quartileTwo, maximum]
+        print('In get_scale_points(), Minimum = {} Q1 = {} Q2 = {} Maximum = {}'.format(minimum,IQR[0],
+                                                                                        IQR[1], maximum))
+        pointsList = [minimum, IQR[0], IQR[1], maximum]
         return pointsList
 
     def find_worst_grip_scale(self, grip_list: [float]):
@@ -133,8 +159,8 @@ class User_Stats:
         for i in sortedList:
             if scale[2] <= i <= scale[3]:
                 temp_list.append(i)
-        print("scale is between {} and {}".format(scale[2], scale[3]))
-        print("over_all_avg = ", self.new_overall_avg())
+        #print("scale is between {} and {}".format(scale[2], scale[3]))
+        #print("over_all_avg = ", self.new_overall_avg())
         scale = self.get_scale_points(temp_list)
         if scale[2] <= self.new_overall_avg() <= scale[3]:
             return 1
@@ -151,8 +177,8 @@ class User_Stats:
         for i in sortedList:
             if scale[0] <= i <= scale[1]:
                 temp_list.append(i)
-        print("scale is between {} and {}".format(scale[0], scale[1]))
-        print("over_all_avg = ", self.new_overall_avg())
+        #print("scale is between {} and {}".format(scale[0], scale[1]))
+        #print("over_all_avg = ", self.new_overall_avg())
         scale = self.get_scale_points(temp_list)
         if scale[2] <= self.new_overall_avg() <= scale[3]:
             return 3
@@ -162,6 +188,7 @@ class User_Stats:
 
 
 if __name__ == '__main__':
+    print("To run experiments please run 'RIVA_Main.py'")
     test_csv = [['1', '1', '-1'], ['4', '4', '-4'], ['3', '3', '-3'],
                 ['3', '3', '3'], ['3', '3', '3'], ['2', '2', '2'],
                 ['2', '2', '2'], ['3', '3', '3'], ['2', '2', '2'],
@@ -199,3 +226,4 @@ if __name__ == '__main__':
     test._followup = "red"
     print("test 5 = " + test.select_feedback())
     '''
+    print("To run experiments please run 'RIVA_Main.py'")
