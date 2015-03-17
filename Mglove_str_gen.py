@@ -212,6 +212,7 @@ def summary_generator(worst_grip: int, best_grip: int) -> str:
 def RIVA_translator(msg_number: int, worst_grip: int, best_grip: int, RIVA_direc, message='') -> str:
     """ Takes a generated feedback string, prepends number for RIVA's facial generator
     """
+    ###Depreciated Function
     return 'Iteration:{};Expression:1;TTS:{}'.format(str(msg_number), message) # Add RIVA_direc to the returned string
 
 def emo_less_feedback(msg_num: int, worst_grip: int, best_grip=0) -> str:

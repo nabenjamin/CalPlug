@@ -52,16 +52,18 @@ def reset_RIVA_log() -> None:
         file.write('Iteration:0;Expression:0;TTS:Welcome_str')
         #print("NewData:0;ENCOURAGEMENT:0;WORST_GRIP_STR:0;WORST_GRIP:0;BEST_GRIP_STR:0;BEST_GRIP:0")
 
-def text_to_RIVA(msg_number: int, worst_grip: int, best_grip: int, RIVA_direction, msg='') -> None:
-    """takes a number representing how many messages have been sent this song, and a txt string. formats it for RIVA
+def text_to_RIVA(*args) -> None:
+    """ Takes an undefined number of audio file names, and formats them to be concatenated by VirtualAssistant.py script
     """
-    # for best grip if a best grip str will not be included, put a five in its place.
-    #print("entering text_to_RIVA")
-    RIVA_message = RIVA_translator(msg_number,worst_grip,best_grip,RIVA_direction, message=msg)
+    RIVA_message = ''
+    for msg in args:
+        if len(RIVA_message) < 1:
+            RIVA_message += msg
+        else:
+            RIVA_message += ";" + msg
     print(RIVA_message)
     with open(RIVA_LOG, 'w', newline= '\n') as outfile:
         outfile.write(RIVA_message)
-        #print(RIVA_message)
 
 def to_no_voice_log(message: str) -> None:
     """ Takes a worst and best grips, then sends them to Musicglove's logfile
@@ -72,14 +74,16 @@ def to_no_voice_log(message: str) -> None:
         #print(message)
 
 '''
-def Old_text_to_RIVA(msg_number: int, text_str: str) -> None:
+def Old_text_to_RIVA(msg_number: int, worst_grip: int, best_grip: int, RIVA_direction, msg='') -> None:
     """takes a number representing how many messages have been sent this song, and a txt string. formats it for RIVA
     """
     # for best grip if a best grip str will not be included, put a five in its place.
-    print("entering text_to_RIVA")
+    #print("entering text_to_RIVA")
+    RIVA_message = RIVA_translator(msg_number,worst_grip,best_grip,RIVA_direction, message=msg)
+    print(RIVA_message)
     with open(RIVA_LOG, 'w', newline= '\n') as outfile:
-        outfile.write('NewData:{};{}\r\n'.format(str(msg_number), text_str))
-        print('NewData:{};{}\r\n'.format(str(msg_number), text_str))
+        outfile.write(RIVA_message)
+        #print(RIVA_message)
 '''
 
 
