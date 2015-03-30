@@ -49,8 +49,7 @@ def play_sound(filename: str) -> None:
 def reset_RIVA_log() -> None:
     #print("entering reset_RIVA_log")
     with open(RIVA_LOG, 'w') as file:
-        file.write('Iteration:0;Expression:0;TTS:Welcome_str')
-        #print("NewData:0;ENCOURAGEMENT:0;WORST_GRIP_STR:0;WORST_GRIP:0;BEST_GRIP_STR:0;BEST_GRIP:0")
+        file.write('')
 
 def text_to_RIVA(*args) -> None:
     """ Takes an undefined number of audio file names, and formats them to be concatenated by VirtualAssistant.py script
